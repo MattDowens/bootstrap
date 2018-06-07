@@ -35,7 +35,7 @@ exec(open("common.py").read())
 exec(open("compat_juliboots.py").read())
 exec(open("blocks1.py").read())
 exec(open("blocks2.py").read())
-
+sdpb_path="./sdpb"
 class PolynomialVector:
     """
     The main class for vectors on which the functionals being found by SDPB may act.
