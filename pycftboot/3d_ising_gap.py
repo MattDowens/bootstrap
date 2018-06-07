@@ -20,20 +20,34 @@ m_max=2
 tab1=bootstrap.ConformalBlockTable(dim,k_max,l_max,m_max,n_max)
 tab2=bootstrap.ConvolvedBlockTable(tab1)
 
+#There is a problem with using arrays here
+sig_set=np.arange(0.5,0.85,0.05)
+eps_set=np.arange(1.0,2.2,0.2)
 #Plots all allowed points in a coarse grid
+def plot_grid(table,sig_range,eps_range):
+    allowed_sig=[]
+    allowed_eps=[]
+    disallowed_sig=[]
+    disallowed_eps=[]
+    for sig in sig_set:
+        for eps in eps_set:
+            sdp=bootstrap.SDP(sig,table)
+            sdp.set_bound(0,float(dim))
+            sdp.add_point(0,eps)
+            result=sdp.iterate()
+            if result:
+                allowed_sig.append(sig)
+                allowed_eps.append(eps)
+            else:
+                disallowed_sig.append(sig)
+                disallowed_eps.append(eps)
+    plt.plot(allowed_sig,allowed_eps,'r+')
+    plt.show()
 
-sig=np.arange(0.5,0.85,0.05)
-eps=np.arange(1.0,2.2,0.2)
+#Example
+plot_grid(tab2,sig_set,eps_set)
 
-
-
-
-
-
-
-
-
-#Computing and formatting times (Can shorten this!)
+#Computing and formatting times (Can shorten this - use Jupyter!)
 end_time=time.time()
 end_cpu=time.clock()
 run_time=end_time-start_time
