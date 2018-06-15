@@ -15,7 +15,7 @@ class IsingGap(object):
         self.sig_values=sig_values
         self.eps_values=eps_values
         
-    def plot_grid(self, parameter, table):
+    def plot_grid(self, par_name, par_value, table):
         start_time=time.time()
         start_cpu=time.clock()
         allowed_sig=[]
@@ -40,7 +40,7 @@ class IsingGap(object):
         cpu_time=time.strftime("%H:%M:%S",time.gmtime(end_cpu-start_cpu))
         plt.plot(allowed_sig,allowed_eps,'r+')
         plt.plot(disallowed_sig,disallowed_eps,'b+')
-        plt.title("n_max="+str(parameter)+". Time Taken: "+run_time+". CPU Time: "+cpu_time)
+        plt.title(par_name+"="+str(par_value)+". Time Taken: "+run_time+". CPU Time: "+cpu_time)
         plt.show()
      
     def iterate_parameter(self, par, par_range):
@@ -48,14 +48,12 @@ class IsingGap(object):
             par_range=[par_range]
         start_time=time.time()
         start_cpu=time.clock()
-#        sig_set=np.arange(0.5,0.85,0.05)
-#        eps_set=np.arange(1.0,2.2,0.2)
-#        bootstrap.cutoff=1e-10
         for x in par_range:
             self.inputs[par]=x
+            #Might make more sense to move tab1 and tab2 calculation to plot_grid()?
             tab1=bootstrap.ConformalBlockTable(self.inputs['dim'],self.inputs['kmax'],self.inputs['lmax'],self.inputs['mmax'],self.inputs['nmax'])
             tab2=bootstrap.ConvolvedBlockTable(tab1)
-            self.plot_grid(x,tab2)
+            self.plot_grid(par,x,tab2)
         end_time=time.time()
         end_cpu=time.clock()
         run_time=time.strftime("%H:%M:%S",time.gmtime(end_time-start_time))
@@ -63,8 +61,10 @@ class IsingGap(object):
         print("Run time "+run_time, "CPU time "+cpu_time)
 
 #Instantiate an IsingGap object and use iterate_paramter to plot grids.
+'''
 sig_set=np.arange(0.5,0.85,0.05)
 eps_set=np.arange(1.0,2.2,0.2)
 ising_gap=IsingGap(3.0, sig_set, eps_set)
 n_range=np.arange(1,4,1)
 ising_gap.iterate_parameter('nmax',n_range)
+'''

@@ -63,8 +63,10 @@ class IsingGap(object):
         print("Run time "+run_time, "CPU time "+cpu_time)
 
 #Instantiate an IsingGap object and use iterate_paramter to plot grids.
+'''
 sig_set=np.arange(0.5,0.85,0.05)
 eps_set=np.arange(1.0,2.2,0.2)
 ising_gap=IsingGap(3.0, sig_set, eps_set)
 n_range=np.arange(1,4,1)
 ising_gap.iterate_parameter('nmax',n_range)
+'''
