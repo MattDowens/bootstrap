@@ -15,23 +15,22 @@ class Grid(object):
 		self.allowed_points = allowed_points
 		self.disallowed_points = disallowed_points
 
-# We define a class with imposes a gap in the Z_2-even operator sector.
-# The continuum starts at a specified value, and we add an operator between this and unitarity bound.
 class IsingGap(object):
 	bootstrap.cutoff=1e-10
 	def __init__(self, from_file = False, file_name = 'name', gap = 3, sig_values = np.arange(0.5,0.85,0.05).tolist(), eps_values = np.arange(1.0,2.2,0.2).tolist()):
-		#self.default_inputs = {'dim': 3, 'kmax': 7, 'lmax': 7, 'mmax': 2, 'nmax': 4}
-		self.inputs = {'dim': 3, 'kmax': 7, 'lmax': 7, 'mmax': 2, 'nmax': 4}
-		self.gap = gap
 		if from_file == True:
 			self.recover_table(file_name)
 		else:
+			self.default_inputs = {'dim': 3, 'kmax': 7, 'lmax': 7, 'mmax': 2, 'nmax': 4}
+			self.inputs = self.default_inputs
+			self.gap = gap
 			self.sig_values = sig_values
 			self.eps_values = eps_values
 			self.table = []
 
-	# Determines allowed and disallowed scaling dimensions for whatever the parameters are.	
+		
 	def determine_grid(self):
+		#key = [self.inputs['dim'], self.inputs['kmax'], self.inputs['lmax'], self.inputs['mmax'], self.inputs['nmax']]
 		key = list(self.inputs.values())
 		tab1 = bootstrap.ConformalBlockTable(*key)
 		tab2 = bootstrap.ConvolvedBlockTable(tab1)
@@ -56,22 +55,20 @@ class IsingGap(object):
 		# Note we will need to implement a look up table to retrieve desired data.
 		self.table.append(grid)
 
-	# Append to the table more grids specified by parameter and parameter range.	
+		
 	def iterate_parameter(self, par, par_range):
-		default_inputs = {'dim': 3, 'kmax': 7, 'lmax': 7, 'mmax': 2, 'nmax': 4}
 		if type(par_range) == int:
 			par_range = [par_range]
 		for x in par_range:
-			#Here, you were inadvertently altering default inputs!!!!
 			self.inputs[par] = x
 			if self.get_grid_index(*list(self.inputs.values())) != -1:
 				continue
 			self.determine_grid()
-		self.inputs = default_inputs
+		self.inputs = self.default_inputs
 
-	# Saves the data as an executable file that will repopulate the table attribute.				
+					
 	def save_to_file(self, name):
-		with open(name + ".py", 'a') as file:
+		with open(name + ".py", 'w') as file:
 			#file.write("self.default_inputs = " + self.default_inputs.__str__() + "\n")
 			#file.write("self.inputs = " + self.inputs.__str__() + "\n")
 			file.write("self.gap = " + self.gap.__str__() + "\n")
@@ -89,7 +86,6 @@ class IsingGap(object):
 				file.write("self.table.append(Grid(dim, kmax, lmax, mmax, nmax, allowed_points, disallowed_points))" + "\n")
             	#file.write("self.table = table")
 
-    # Recoveres a table stored to a file.
 	def recover_table(self, file_name):
 		exec(open(file_name + ".py").read())
 
@@ -101,13 +97,13 @@ class IsingGap(object):
 				return i
 		return -1
 
-	# Plots and saves a series of grids to an output PDF file.
-	# Takes as input parameter values for which we want plotted grids, and the desired PDF file name.
-	def plot_grids(self, dim_values, kmax_values, lmax_values, mmax_values, nmax_values, file_name):
+
+	# Note, imputs will be a list of grid objects, as found in the table attribute.
+	def plot_grids(dim_values, kmax_values, lmax_values, mmax_values, nmax_values):
 
 		table = self.generate_table(dim_values, kmax_values, lmax_values, mmax_values, nmax_values)
 	
-		pdf_pages = PdfPages(file_name + ".pdf")
+		pdf_pages = PdfPages('grids.pdf')
 	
 		# Define the number of plots per page and the size of the grid board.
 		nb_plots = len(table)
@@ -153,8 +149,7 @@ class IsingGap(object):
 
 
 	# Generates a table of already determined grids, specified by lists of points of input parameters.
-	# Gives a warning message if a grid isn't found.
-	def generate_table(self, dim_range, kmax_range, lmax_range, mmax_range, nmax_range):
+	def generate_table(dim_range, kmax_range, lmax_range, mmax_range, nmax_range):
 		# table to store the resulting grids.
 		table = []
 	
@@ -168,7 +163,8 @@ class IsingGap(object):
 			mmax_range = [mmax_range]
 		if type(nmax_range) == int:
 			nmax_range = [nmax_range]
-
+	
+		# Generates a list of unique keys, giving a warning message if a grid isn't found.
 		keys = []
 		for dim in dim_range:
 			for kmax in kmax_range:
