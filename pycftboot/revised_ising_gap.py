@@ -6,8 +6,7 @@ import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
 
 class Grid(object):
-	def __init__(self, dim, kmax, lmax, mmax, nmax, allowed_points, disallowed_points):
-		self.dim = dim
+	def __init__(self, kmax, lmax, mmax, nmax, allowed_points, disallowed_points):
 		self.kmax = kmax
 		self.lmax = lmax
 		self.mmax = mmax
@@ -19,34 +18,30 @@ class Grid(object):
 # The continuum starts at a specified value, and we add an operator between this and unitarity bound.
 class IsingGap(object):
 	bootstrap.cutoff=1e-10
-	def __init__(self, from_file = False, file_name = 'name', gap = 3, sig_values = np.arange(0.5,0.85,0.05).tolist(), eps_values = np.arange(1.0,2.2,0.2).tolist()):
-		#self.default_inputs = {'dim': 3, 'kmax': 7, 'lmax': 7, 'mmax': 2, 'nmax': 4}
-		self.inputs = {'dim': 3, 'kmax': 7, 'lmax': 7, 'mmax': 2, 'nmax': 4}
+	def __init__(self, from_file = False, file_name = 'name', dim = 3, gap = 3, sig_values = np.arange(0.5,0.85,0.05).tolist(), eps_values = np.arange(1.0,2.2,0.2).tolist()):
+		self.dim = dim
 		self.gap = gap
+		self.sig_values = sig_values
+		self.eps_values = eps_values
 		if from_file == True:
 			self.recover_table(file_name)
 		else:
-			self.sig_values = sig_values
-			self.eps_values = eps_values
 			self.table = []
 
 	# Determines allowed and disallowed scaling dimensions for whatever the parameters are.	
-	def determine_grid(self):
-		key = list(self.inputs.values())
-		tab1 = bootstrap.ConformalBlockTable(*key)
+	def determine_grid(self, key):
+		tab1 = bootstrap.ConformalBlockTable(self.dim, *key)
 		tab2 = bootstrap.ConvolvedBlockTable(tab1)
 		
 		# Instantiate a Grid object with appropriate input values.
 		grid=Grid(*key, [], [])
 		
 		for sig in self.sig_values:
-			for eps in self.eps_values: 
-				
+			for eps in self.eps_values: 				
 				sdp = bootstrap.SDP(sig,tab2)
 				sdp.set_bound(0,float(self.gap))
 				sdp.add_point(0,eps)
-				result = sdp.iterate()
-				
+				result = sdp.iterate()				
 				if result:
 					grid.allowed_points.append((sig, eps))
 				else:
@@ -57,56 +52,42 @@ class IsingGap(object):
 		self.table.append(grid)
 
 	# Append to the table more grids specified by parameter and parameter range.	
-	def iterate_parameter(self, par, par_range):
-		default_inputs = {'dim': 3, 'kmax': 7, 'lmax': 7, 'mmax': 2, 'nmax': 4}
-		if type(par_range) == int:
-			par_range = [par_range]
-		for x in par_range:
-			#Here, you were inadvertently altering default inputs!!!!
-			self.inputs[par] = x
-			if self.get_grid_index(*list(self.inputs.values())) != -1:
+	def iterate_parameters(self, kmax_range, lmax_range, mmax_range, nmax_range):
+		keys = self.generate_keys(kmax_range, lmax_range, mmax_range, nmax_range)
+		for key in keys:
+			if self.get_grid_index(key) != -1:
 				continue
-			self.determine_grid()
-		self.inputs = default_inputs
+			self.determine_grid(key)
 
 	# Saves the data as an executable file that will repopulate the table attribute.				
 	def save_to_file(self, name):
 		with open(name + ".py", 'a') as file:
-			#file.write("self.default_inputs = " + self.default_inputs.__str__() + "\n")
-			#file.write("self.inputs = " + self.inputs.__str__() + "\n")
-			file.write("self.gap = " + self.gap.__str__() + "\n")
-			file.write("self.sig_values = " + self.sig_values.__str__() + "\n")
-			file.write("self.eps_values = " + self.eps_values.__str__() + "\n")
 			file.write("self.table = []\n")
 			for grid in self.table:
-				file.write("dim = " + str(grid.dim) + "\n")
 				file.write("kmax = " + str(grid.kmax) + "\n")
 				file.write("lmax = " + str(grid.lmax) + "\n")
 				file.write("mmax = " + str(grid.mmax) + "\n")
 				file.write("nmax = " + str(grid.nmax) + "\n")
 				file.write("allowed_points = " + str(grid.allowed_points) + "\n")
 				file.write("disallowed_points = " + str(grid.disallowed_points) + "\n")
-				file.write("self.table.append(Grid(dim, kmax, lmax, mmax, nmax, allowed_points, disallowed_points))" + "\n")
-            	#file.write("self.table = table")
+				file.write("self.table.append(Grid(kmax, lmax, mmax, nmax, allowed_points, disallowed_points))" + "\n")
 
-    # Recoveres a table stored to a file.
+	# Recoveres a table stored to a file.
 	def recover_table(self, file_name):
 		exec(open(file_name + ".py").read())
 
 
-	# Searches table of grids for index matching input parameters. Returns -1 if not found.
-	def get_grid_index(self, dim, kmax, lmax, mmax, nmax):
+	# Searches table of grids for index matching the input key. Returns -1 if not found.
+	def get_grid_index(self, key):
 		for i in range(0, len(self.table)):
-			if self.table[i].dim == dim and self.table[i].kmax == kmax and self.table[i].lmax == lmax and self.table[i].mmax == mmax and self.table[i].nmax == nmax:
+			if self.table[i].kmax == key[0] and self.table[i].lmax == key[1] and self.table[i].mmax == key[2] and self.table[i].nmax == key[3]:
 				return i
 		return -1
 
 	# Plots and saves a series of grids to an output PDF file.
 	# Takes as input parameter values for which we want plotted grids, and the desired PDF file name.
-	def plot_grids(self, dim_values, kmax_values, lmax_values, mmax_values, nmax_values, file_name):
-
-		table = self.generate_table(dim_values, kmax_values, lmax_values, mmax_values, nmax_values)
-	
+	def plot_grids(self, keys, file_name):
+		table = self.generate_table(keys)
 		pdf_pages = PdfPages(file_name + ".pdf")
 	
 		# Define the number of plots per page and the size of the grid board.
@@ -151,15 +132,8 @@ class IsingGap(object):
 			
 		pdf_pages.close()
 
-
-	# Generates a table of already determined grids, specified by lists of points of input parameters.
-	# Gives a warning message if a grid isn't found.
-	def generate_table(self, dim_range, kmax_range, lmax_range, mmax_range, nmax_range):
-		# table to store the resulting grids.
-		table = []
-	
-		if type(dim_range) == int:
-			dim_range = [dim_range]
+	# Returns a key or list of keys generated by the input parameter ranges.
+	def generate_keys(self, kmax_range, lmax_range, mmax_range, nmax_range):
 		if type(kmax_range) == int:
 			kmax_range = [kmax_range]
 		if type(lmax_range) == int:
@@ -168,21 +142,47 @@ class IsingGap(object):
 			mmax_range = [mmax_range]
 		if type(nmax_range) == int:
 			nmax_range = [nmax_range]
-
 		keys = []
-		for dim in dim_range:
-			for kmax in kmax_range:
-				for lmax in lmax_range:
-					for mmax in mmax_range:
-						for nmax in nmax_range:
-							key = [dim, kmax, lmax, mmax, nmax]
-							if self.get_grid_index(*key) == -1:
-								print("Grid at dim = " + str(key[0]) + ", " +
-									"kmax = " + str(key[1]) + ", " +
-									"lmax = " + str(key[2]) + ", " +
-									"mmax = " + str(key[3]) + ", " +
-									"nmax = " + str(key[4]) + " does not exist.")
-							else:
-								table.append(self.table[self.get_grid_index(*key)])
+		for kmax in kmax_range:
+			for lmax in lmax_range:
+				for mmax in mmax_range:
+					for nmax in nmax_range:
+						key = [kmax, lmax, mmax, nmax]
+						keys.append(key)
+		return keys
+
+	# Generates a subtable table of desired, already determined grids from main table.
+	# Gives a warning message if a grid isn't found.
+	def generate_table(self, keys):
+		# table to store the resulting grids.
+		table = []
+		for key in keys:
+			if self.get_grid_index(key) == -1:
+				print("Grid at kmax = " + str(key[0]) + ", " +
+					"lmax = " + str(key[1]) + ", " +
+					"mmax = " + str(key[2]) + ", " +
+					"nmax = " + str(key[3]) + ", " + "does not exist.")
+			else:
+				table.append(self.table[self.get_grid_index(key)])
 							
 		return table
+
+	def convergence_factor(self, key):
+		grid = self.table[self.get_grid_index(key)]
+		#key = self.generate_keys(grid.kmax, grid.lmax, grid.mmax, grid.nmax)[0]
+		grid_value = abs(len(grid.allowed_points) - len(grid.disallowed_points))
+
+		convergence = 0  
+		for i in range(len(key)):
+			key[i] += 1
+			if self.get_grid_index(key) == -1:
+				print ("Can't calculate convergence factor. The required grids have not been calculated.")
+				break
+			else:
+				next_grid = self.table[self.get_grid_index(key)]
+				next_grid_value = abs(len(next_grid.allowed_points) - len(next_grid.disallowed_points))
+				convergence += abs(grid_value - next_grid_value)
+			key[i] -= 1   
+		convergence /= len(key)
+	
+		return convergence
