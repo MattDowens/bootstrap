@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 sig = 0.516
 eps = 1.39
 kmax = 5
@@ -377,8 +376,3 @@ xml_cpu = 0:00:05
 sdp_time = 0:00:21
 sdp_cpu = 0:00:00
 self.point_table.append(Point(sig, eps, kmax, lmax, mmax, nmax, components, max_dimension, allowed, run_time, cpu_time, cb_time, cb_cpu, xml_time, xml_cpu, sdp_time, sdp_cpu))
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:e0bf9b1cae60711537f5ddd7fae27c56ad2b613b9f2aae5cb7c389ab3aa158f8
-size 9578
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

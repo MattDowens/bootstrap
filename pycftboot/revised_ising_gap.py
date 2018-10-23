@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import bootstrap
 import matplotlib.pyplot as plt
 import time, datetime
@@ -349,8 +348,3 @@ class IsingGap(object):
 				row_index = 0
 			
 		pdf_pages.close()
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:f182d0144829d821189b997fdd535955880ca87f08709e96f5b1794c04ac4ddb
-size 13231
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

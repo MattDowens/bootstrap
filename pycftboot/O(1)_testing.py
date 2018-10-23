@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import bootstrap
 import matplotlib.pyplot as plt
 import time
@@ -132,8 +131,3 @@ if result == False:
 
 point = Point(*([phi, sing] + key + [dimension, max_dimension, result, run_time, cpu_time, cb_time, cb_cpu, xml_time, xml_cpu, sdp_time, sdp_cpu]))
 point.save(mixed.point_file)
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:683cf8f346263bb63a650cf99644405caab76d403c21d4b5ca47703549987bac
-size 5196
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

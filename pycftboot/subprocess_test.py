@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import bootstrap
 import matplotlib.pyplot as plt
 import time
@@ -99,8 +98,3 @@ for i in range(len(row[0])):
 
     point = Point(*([sig, eps] + key + [result, run_time, cpu_time, CB_time, CB_cpu, bootstrap.xml_time, bootstrap.xml_cpu, sdp_time, sdp_cpu]))
     point.save("a_test_point")
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:4a5aafd58e48fbe88155055413a059c125727d8d20915bcc3fc67fabf1550e6b
-size 4227
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

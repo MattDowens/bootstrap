@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import bootstrap
 import matplotlib.pyplot as plt
 import time
@@ -70,8 +69,3 @@ bootstrap.chol_tol = tolerance
 mixed.point_file = SGE_TASK_ID.__str__()
 
 mixed.determine_points(key, row_lists[row_index])
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:57028a635cd97e6cf17c77bdf0aa3d2c99046b31bb57fd9b916f9dcd9ac74a9c
-size 1802
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 kmax = 7
 lmax = 7
 mmax = 2
@@ -12995,8 +12994,3 @@ disallowed_points = [(0.5, 1.0), (0.5, 1.2), (0.5, 1.4), (0.5, 1.599999999999999
 run_time = 0
 cpu_time = 0
 self.table.append(Grid(kmax, lmax, mmax, nmax, allowed_points, disallowed_points, run_time, cpu_time))
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:55799d56b7b7f43f079f668c1f455bdf1689bb3ebf7d2ef9da1ba9edb5017298
-size 2523200
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # We create a 'master' Ising class, with options to gap the spectrum or use mixed correlator information.
 import subprocess
 import bootstrap
@@ -715,8 +714,3 @@ class MixedCorrelator(Ising):
 			for line in infile:
 				exec(line)
 		#exec(open(file_name + ".py").read())
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:f7c428fea6719fda352e43e03c3bff6474ccc4ff16f061d2cbae60764cb991b2
-size 30119
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

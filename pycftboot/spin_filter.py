@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import bootstrap
 import matplotlib.pyplot as plt
 import time
@@ -635,8 +634,3 @@ mixed.point_file = index.__str__()
 rows = mixed.generate_rows(start, stop, sig_num, eps_num)
 
 determine_line_spins(keys[index])
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:dcb656a8ef87c058a524eec419d0901572d501450797c12951021d3107a42124
-size 20332
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

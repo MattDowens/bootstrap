@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # We create a 'master' Ising class, with options to gap the spectrum or use mixed correlator information.
 import bootstrap
 import matplotlib.pyplot as plt
@@ -534,8 +533,3 @@ class IsingGap(object):
 		# else:
 		#	self.table = []
 '''
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:38dcca423a1669990e166f7755108263f38afb93872c91c71fb2e3f79e6a6d88
-size 21785
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

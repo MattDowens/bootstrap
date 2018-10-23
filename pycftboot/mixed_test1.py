@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 kmax = 3
 lmax = 3
 mmax = 3
@@ -568,8 +567,3 @@ disallowed_points = (0.5186, 1.4166999999999992)
 run_time = 0:24:14
 cpu_time = 0:05:16
 self.grid_table.append(Grid(kmax, lmax, mmax, nmax, allowed_points, disallowed_points, run_time, cpu_time))
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:78b098b7defa17bc78063dc1ae79d97aca99ca893f1716323225f510b5ee09ca
-size 12134
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

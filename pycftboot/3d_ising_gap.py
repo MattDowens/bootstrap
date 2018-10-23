@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import bootstrap
 import matplotlib.pyplot as plt
 import time
@@ -71,8 +70,3 @@ run_time=time.strftime("%H:%M:%S",time.gmtime(end_time-start_time))
 #cpu_time1=time.gmtime(cpu_time)
 cpu_time=time.strftime("%H:%M:%S",time.gmtime(end_cpu-start_cpu))
 print("Run time "+run_time, "CPU time "+cpu_time)
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:e17749d7a696053a443669850f21922e8d711fa8129e2bab066f0502e4bc3954
-size 1903
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Put this file in the working directory of the master 'Results' folder.
 # It will iterate through python files, and concatentat them into one file.
 
@@ -13,8 +12,3 @@ for filename in os.listdir(basepath):
             	for line in openfile:
             		new_line = re.sub("(\d+:\d+:\d+)", 'time.strptime("\\1", "%H:%M:%S")', line)
             		cat_file.write(line)
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:ee40a361a69a51ecd9bd02a87bd87c94430d9bc55ea19787fba6c3456030212c
-size 612
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

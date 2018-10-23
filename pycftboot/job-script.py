@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # This is the script for one job instance, parametrized by $SGE_TASK_ID.
 import bootstrap
 import matplotlib
@@ -49,8 +48,3 @@ ising_gap.iterate_parameters(k_range, l_range, m_range, n_range)
 
 # Save the contents of 'table' to an executable python file, 
 ising_gap.save_to_file(SGE_TASK_ID.__str__())
-=======
-version https://git-lfs.github.com/spec/v1
-oid sha256:d8604d4694e3dc4aba1de7a8c43a79e5ad18b08f6e8a7479fe96901888de359d
-size 1509
->>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013
