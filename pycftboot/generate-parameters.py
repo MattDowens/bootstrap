@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python program to generate parameter file.
 # We choose a job instance to iterate through all (m, n) for a given (k, l), so we have 400 jobs.
 # N.b this is a necessary choice to keep each job self-contained to allow embarassing parallelization.
@@ -35,3 +36,8 @@ with open(name + ".txt", 'w') as file:
 		k_start += 1
 		l_start = 1
 #		SGE_TASK_ID += 1
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:5baef2711a7f5344d058b4a51985f231ffed0adf899fe20cbefacce65363099b
+size 1041
+>>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

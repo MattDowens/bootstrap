@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 kmax = 30
 lmax = 30
 mmax = 3
@@ -54683,3 +54684,8 @@ xml_cpu = time.strptime("0:06:14", "%H:%M:%S")
 sdp_time = time.strptime("0:07:13", "%H:%M:%S")
 sdp_cpu = time.strptime("0:00:00", "%H:%M:%S")
 self.point_table.append(Point(kmax, lmax, mmax, nmax, sig, eps, run_time, cpu_time, CB_time, CB_cpu, xml_time, xml_cpu, sdp_time, sdp_cpu))
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:05901559df01f57f47c4667dc3a622c1e22a46f000c0510122e625dd6e13e422
+size 2041098
+>>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

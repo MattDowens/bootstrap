@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import bootstrap
 import matplotlib.pyplot as plt
 import time
@@ -136,3 +137,8 @@ for i in [0, 1]:
 
 	point = Point(*([phi, sing] + key + [dimension, max_dimension, result, run_time, cpu_time, cb_time, cb_cpu, xml_time, xml_cpu, sdp_time, sdp_cpu]))
 	point.save(mixed.point_file)
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:5aaba2f304e5d669d974a1e538dbd364f09d54a657f9db6e46f705957d041b98
+size 5485
+>>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

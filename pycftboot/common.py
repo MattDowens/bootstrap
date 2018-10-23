@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 cb_end = 0
 cb_end_cpu = 0
 chol_tol = 1e-200
@@ -394,3 +395,8 @@ def chain_rule_double(m_order, n_order, rules1, rules2, table, conformal_blocks)
                         new_deriv += deriv[i][j] * conformal_blocks[l].chunks[j].get(i, 0)
                 table[l].vector.append(new_deriv.expand())
             order += 1
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:c3e436d4cc87d86507d5a877cb1bd93c1ccc782897819d4e644854538686a2df
+size 16007
+>>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

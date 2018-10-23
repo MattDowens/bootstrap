@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # We create a 'master' Ising class, with options to gap the spectrum or use mixed correlator information.
 import bootstrap
 import matplotlib.pyplot as plt
@@ -685,3 +686,8 @@ class MixedCorrelator(Ising):
 	# Recoveres a table of Point objects stored to a file.
 	def recover_points(self, file_name):
 		exec(open(file_name + ".py").read())
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:442f2e4c79daa91ce58ba36543c2a5cd6ffba09645e143c7450bf7898a75037c
+size 29091
+>>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

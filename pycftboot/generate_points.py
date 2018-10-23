@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 sig_step = 0.0001/13
 eps_step = 0.001/13
 
@@ -33,3 +34,8 @@ for i in range(len(info)):
 	if i!= len(info) -1:
 		sig_row_start += (info[i][1][0] * v1[0] + info[i][1][1] * v2[0])
 		eps_row_start += (info[i][1][0] * v1[1] + info[i][1][1] * v2[1])
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:328d43a3a7f637c386bb3d37fb669072f90695c1810c61c2ed9adf16ab648f37
+size 1427
+>>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

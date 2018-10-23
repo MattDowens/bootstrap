@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import bootstrap
 import subprocess
 import matplotlib.pyplot as plt
@@ -132,3 +133,8 @@ for i in range(len(row_lists[row_index])):
 
     point = Point(*([sig, eps] + key + [result, run_time, cpu_time, CB_time, CB_cpu, bootstrap.xml_time, bootstrap.xml_cpu, sdp_time, sdp_cpu]))
     point.save(mixed.point_file)
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:6a1dc841674c889585441f2c3657762e5abb853c6ed8e6590782f1c6d105e1de
+size 5284
+>>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

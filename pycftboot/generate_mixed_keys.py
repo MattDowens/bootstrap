@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import math
 
 def compute_n(kmax):
@@ -10,3 +11,8 @@ with open("mixed_keys" + ".txt", 'w') as file:
 				file.write(str(i) + " " + str(i) + " " + str(compute_n(i)-2) + " " + str(compute_n(i)) + " " + str(j) + "\n")
 			else:
 				file.write(str(i) + " " + str(50) + " " + str(compute_n(i)-2) + " " + str(compute_n(i)) + " " + str(j) + "\n")
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:f765877067034c6b625b4b7aaa75d7e92573be838d664c85b25ac420644ac6c5
+size 416
+>>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

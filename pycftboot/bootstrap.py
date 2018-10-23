@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #!/usr/bin/env python2
 """
 PyCFTBoot is an interface for the numerical bootstrap in arbitrary dimension,
@@ -1774,3 +1775,8 @@ class SDP:
         solution = output["y"]
         solution = solution[zeros + nullity:]
         return DenseMatrix(zeros, 1, solution)
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:442d8a3ac35bd1ce9742ea6ce72e0a7c4eb211c01a3a39f7410ae6a7ac4d49c6
+size 84925
+>>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import bootstrap
 import matplotlib.pyplot as plt
 import time
@@ -62,3 +63,8 @@ mixed.point_file = row_index.__str__()
 
 mixed.determine_points([30, 25, 3, 5], row_lists[row_index])
 
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:429b0d90feefcc19c14a631f126d9ec56667f28c2099455c5105b3befa5aa370
+size 2244
+>>>>>>> d87b7d1ea1656ad601911b3142003880ece5c013
