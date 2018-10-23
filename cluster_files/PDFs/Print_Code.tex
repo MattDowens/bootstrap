@@ -1,0 +1,65 @@
+\documentclass[10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{beramono}
+\usepackage{color}
+\renewcommand*\familydefault{\ttdefault}
+\usepackage{listings}
+
+\textheight=700pt
+\topmargin=-80pt
+%\lstset{
+%  xleftmargin=0pt,
+%  language=Python,
+%  showstringspaces=False,
+%  formfeed=\newpage,
+%  tabsize=4,
+%  commentstyle=\itshape,
+%  basicstyle=\ttfamily,
+%%  morekeywords={models, lambda, forms}
+%}
+
+\lstset{ %
+language=Bash,                % choose the language of the code
+basicstyle=\ttfamily,       % the size of the fonts that are used for the code
+numbers=left,                   % where to put the line-numbers
+numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
+numbersep=15pt,                  % how far the line-numbers are from the code
+backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=false,           % adds a frame around the code
+tabsize=2,          % sets default tabsize to 2 spaces
+captionpos=b,           % sets the caption-position to bottom
+breaklines=true,        % sets automatic line breaking
+breakatwhitespace=false,    % sets if automatic breaks should only happen at whitespace
+escapeinside={\%*}{*)},          % if you want to add a comment within your code
+xleftmargin=-90pt,
+xrightmargin=-90pt,
+}
+
+
+\newcommand{\code}[2]{
+\hrulefill
+\subsection*{#1}
+\lstinputlisting{#2}
+\vspace{2em}
+}
+
+\begin{document}
+%\begin{lstlisting}
+%def factorial(n):
+%   """The factorial of a number the slow way"""
+%
+%   # comments are printed in italic
+%    if n == 0:
+%        return 1
+%    else:
+%        return n * factorial(n-1)
+%\end{lstlisting}
+
+%% Use this to include files
+\code{job-script.sh}{/Users/MatthewDowens/Dropbox/PhD/bootstrap/cluster_files/job-script.sh}
+
+\end{document}
