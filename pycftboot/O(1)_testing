@@ -1,0 +1,81 @@
+import bootstrap
+import matplotlib.pyplot as plt
+import time
+import datetime
+import numpy as np
+from matplotlib.backends.backend_pdf import PdfPages
+from archipelago import *
+import sys
+#bootstrap.sdpb_path = "/usr/local/Cellar/sdpb/0.0.2/bin/sdpb"
+
+phi_num = 30
+sing_num = 20
+
+start = [0.501, 1.05]
+stop = [0.53, 2.0]
+
+mixed = MixedCorrelator(N = 1)
+mixed.point_file = "arch_testing"
+rows = mixed.generate_rows(start, stop, phi_num, sing_num)
+row_index = 1
+bootstrap.prec = 800
+
+phi = eval_mpfr(rows[11][0][10], bootstrap.prec)
+sing = eval_mpfr(rows[11][1][10], bootstrap.prec)
+
+for n in np.arange(2,8,1):
+    key = [n**2, n**2, n-2, n]
+    g_tab1 = bootstrap.ConformalBlockTable(3, *(key + [0, 0, "odd_spins = True"]))
+    g_tab2 = bootstrap.ConformalBlockTable(3, *(key + [phi - sing, phi - sing, "odd_spins = True"]))
+    g_tab3 = bootstrap.ConformalBlockTable(3, *(key + [sing - phi, phi - sing, "odd_spins = True"]))
+
+    f_tab1a = bootstrap.ConvolvedBlockTable(g_tab1)
+    f_tab1s = bootstrap.ConvolvedBlockTable(g_tab1, symmetric = True)
+    f_tab2a = bootstrap.ConvolvedBlockTable(g_tab2)
+    f_tab3a = bootstrap.ConvolvedBlockTable(g_tab3)
+    f_tab3s = bootstrap.ConvolvedBlockTable(g_tab3, symmetric = True)
+
+    tab_list = [f_tab1a, f_tab1s, f_tab2a, f_tab3a, f_tab3s]
+    
+    dimension = (5 * len(f_tab1a.table[0].vector)) + (2 * len(f_tab1s.table[0].vector))
+    max_dimension = 0
+    for tab in tab_list:
+        max_dimension = max(max_dimension, len(tab.table[0].vector))
+
+    print("Number of components (dim of PolynomialVectorMatrices) : " + dimension.__str__() + ".")
+    print("Kmax should be around (max dimension of convolved block tables): " + max_dimension.__str__() + ".")
+    print("It is: " + key[0].__str__() + ".")
+    
+    sdp = bootstrap.SDP([phi, sing], tab_list, vector_types = mixed.info)
+    
+    # We assume the continuum in both even vector and even singlet sectors begins at the dimension=3.
+    sdp.set_bound([0, 0], 3)
+    sdp.set_bound([0, 3], 3)
+
+    # Except for the two lowest dimension scalar operators in each sector.
+    sdp.add_point([0, 0], sing)
+    sdp.add_point([0, 3], phi)
+
+
+    sdp.set_option("maxThreads", 16)
+    sdp.set_option("dualErrorThreshold", 1e-15)
+    sdp.set_option("maxIterations", 1000)
+    
+    name = "test_SDP"
+    obj = [0.0] * len(sdp.table[0][0][0].vector)
+    sdp.write_xml(obj, sdp.unit, name)
+    
+    sdpb = subprocess.Popen(["/usr/local/Cellar/sdpb/0.0.2/bin/sdpb", "-s", name + ".xml", "--precision=" + str(bootstrap.prec), "--findPrimalFeasible", "--findDualFeasible", "--noFinalCheckpoint"] + sdp.options)
+    print(str(os.getppid()))
+    print("Running SDPB. Process ID: " + str(sdpb.pid))
+    sdpb.wait()
+    print("SDPB has finished running. RETURN code: " + str(sdpb.returncode))
+    
+    if sdpb.returncode != 0:
+        print("There was a problem running SDPB. See the process returncode attribute for more info.")
+        continue
+        
+    output = sdp.read_output(name = name)
+    terminate_reason = output["terminateReason"]
+    result = terminate_reason == "found primal feasible solution"
+    print("The result is: " + result.__str__())
