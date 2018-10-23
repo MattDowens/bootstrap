@@ -1,3 +1,6 @@
+cb_end = 0
+cb_end_cpu = 0
+chol_tol = 1e-200
 cutoff = 0
 prec = 660
 dec_prec = int((3.0 / 10.0) * prec)
@@ -11,7 +14,9 @@ ell = Symbol('ell')
 delta  = Symbol('delta')
 delta_ext = Symbol('delta_ext')
 
-sdpb_path = "/usr/bin/sdpb"
+# N.b sdpb_path varies depending on if using local machine or cluster.
+# sdpb_path = "/usr/local/Cellar/sdpb/0.0.2/bin/sdpb"
+sdpb_path = "/home/v1mdowen/.local/bin/sdpb"
 sdpb_options = ["maxThreads", "checkpointInterval", "maxIterations", "maxRuntime", "dualityGapThreshold", "primalErrorThreshold", "dualErrorThreshold", "initialMatrixScalePrimal", "initialMatrixScaleDual", "feasibleCenteringParameter", "infeasibleCenteringParameter", "stepLengthReduction", "choleskyStabilizeThreshold", "maxComplementarity"]
 sdpb_defaults = ["4", "3600", "500", "86400", "1e-30", "1e-30", "1e-30", "1e+20", "1e+20", "0.1", "0.3", "0.7", "1e-40", "1e+100"]
 

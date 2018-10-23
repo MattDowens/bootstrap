@@ -19,6 +19,9 @@ import mpmath
 import time
 import re
 import os
+import subprocess
+import time, datetime
+import new_ising_class as ic
 
 # Use regular sympy sparingly because it is slow
 # Every time we explicitly use it, we should consider implementing such a line in C++
@@ -35,7 +38,7 @@ exec(open("common.py").read())
 exec(open("compat_juliboots.py").read())
 exec(open("blocks1.py").read())
 exec(open("blocks2.py").read())
-sdpb_path="./sdpb"
+# sdpb_path="./sdpb"
 class PolynomialVector:
     """
     The main class for vectors on which the functionals being found by SDPB may act.
@@ -569,6 +572,9 @@ class SDP:
         self.unit = []
         self.irrep_set = []
 
+        self.bad_indices = []
+        self.spins_used = []
+
         # Turn any "raw elements" from the vectorial sum rule into 1x1 matrices
         for i in range(0, len(vector_types)):
             for j in range(0, len(vector_types[i][0])):
@@ -743,13 +749,41 @@ class SDP:
                            numerical stability of `SDPB` from being recalculated.
                            Defaults to `True`.
         """
+
+        # We catch error due to Cholesky decomposition failing.
+        # We trim sdp.table down to only good spin polyvecmatrices and record 'good' spins.
+        bad_indices = []
         if gapped_spin_irrep == -1:
             for l in range(0, len(self.table)):
                 spin = self.table[l][0][0].label[0]
-                self.bounds[l] = unitarity_bound(self.dim, spin)
+                self.bounds[l] = [spin, unitarity_bound(self.dim, spin)]
 
                 if reset_basis:
-                    self.set_basis(l)
+                    try:
+                        self.set_basis(spin, l)
+                    except ValueError:
+                        bad_indices.append(l)
+                        continue
+
+            bad_spins = []
+            for l in bad_indices:
+                spin = self.table[l][0][0].label[0]
+                if spin not in bad_spins:
+                    bad_spins.append(spin)
+
+            #self.table = [polyvecmatrix for polyvecmatrix in self.table if polyvecmatrix[0][0].label[0] not in bad_spins]
+            #self.basis = [matrix for matrix in self.basis if isinstance(matrix, mpmath.matrix)]
+            #self.bounds = [bound for bound in self.bounds if bound!=0]
+
+            self.bounds = [couple[1] for couple in self.bounds if couple[0] not in bad_spins]
+            self.table = [polyvecmatrix for polyvecmatrix in self.table if polyvecmatrix[0][0].label[0] not in bad_spins]
+            self.basis = [entry[1] for entry in self.basis if isinstance(entry,(list,)) and entry[0] not in bad_spins and isinstance(entry[1], mpmath.matrix)]
+
+            for l in range(len(self.table)):
+                spin = self.table[l][0][0].label[0]
+                self.spins_used.append(spin)
+
+
         else:
             if type(gapped_spin_irrep) == type(1):
                 gapped_spin_irrep = [gapped_spin_irrep, 0]
@@ -763,7 +797,7 @@ class SDP:
                 self.bounds[l] = delta_min
 
             if reset_basis:
-                self.set_basis(l)
+                self.set_basis(spin, l)
 
     def get_option(self, key):
         """
@@ -834,7 +868,7 @@ class SDP:
                 return l
         return -1
 
-    def set_basis(self, index):
+    def set_basis(self, spin, index):
         """
         Calculates a basis of polynomials that are orthogonal with respect to the
         positive measure prefactor that turns a `PolynomialVector` into a rational
@@ -846,7 +880,10 @@ class SDP:
         index: The position of the matrix in `table` whose basis needs updating.
         """
         poles = self.table[index][0][0].poles
-        delta_min = mpmath.mpf(self.bounds[index].__str__())
+        if type(self.bounds[index]) == type(1):
+            delta_min = mpmath.mpf(self.bounds[index].__str__())
+        else:
+            delta_min = mpmath.mpf(self.bounds[index][1].__str__())
         bands = []
         matrix = []
 
@@ -870,9 +907,9 @@ class SDP:
             matrix.append(new_entries)
 
         matrix = mpmath.matrix(matrix)
-        matrix = mpmath.cholesky(matrix, tol = mpmath.mpf(1e-200))
+        matrix = mpmath.cholesky(matrix, tol = mpmath.mpf(chol_tol))
         matrix = mpmath.inverse(matrix)
-        self.basis[index] = matrix
+        self.basis[index] = [spin, matrix]
 
     def reshuffle_with_normalization(self, vector, norm):
         """
@@ -1206,11 +1243,34 @@ class SDP:
                     without any ".xml" at the end. Defaults to "mySDP".
         """
         obj = [0.0] * len(self.table[0][0][0].vector)
+        print("Now writing the SDP to an xml file.")
         self.write_xml(obj, self.unit, name)
+        global xml_end
+        global xml_end_cpu
+        global xml_time
+        global xml_cpu
+        xml_end = time.time()
+        xml_end_cpu = time.clock()
+        xml_time = datetime.timedelta(seconds = int(xml_end - cb_end))
+        xml_cpu = datetime.timedelta(seconds = int(xml_end_cpu - cb_end_cpu))
+        
+        print("The xml file has been written.")
+        print("Time taken: " + str(xml_time))
+        print("CPU_time: " + str(xml_cpu))
 
-        os.spawnvp(os.P_WAIT, sdpb_path, ["sdpb", "-s", name + ".xml", "--precision=" + str(prec), "--findPrimalFeasible", "--findDualFeasible", "--noFinalCheckpoint"] + self.options)
+        print("Now running the SDP to determine info on the point.")
+
+        #os.spawnvp(os.P_WAIT, sdpb_path, ["sdpb", "-s", name + ".xml", "--precision=" + str(prec), "--findPrimalFeasible", "--findDualFeasible", "--noFinalCheckpoint"] + self.options)
+        
+        sdpb = subprocess.Popen([sdpb_path, "-s", name + ".xml", "--precision=" + str(prec), "--findPrimalFeasible", "--findDualFeasible", "--noFinalCheckpoint"] + self.options)
+        print("Parent ID: " + str(os.getppid()))
+        print("Running SDPB. Process ID: " + str(sdpb.pid))
+        sdpb.wait()
+        print("SDPB has finished running. RETURN code: " + str(sdpb.returncode))
+        if sdpb.returncode != 0:
+            print("There was a problem running SDPB. See the process returncode attribute for more info.")
+        
         output = self.read_output(name = name)
-
         terminate_reason = output["terminateReason"]
         return terminate_reason == "found primal feasible solution"
 
